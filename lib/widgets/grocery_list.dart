@@ -30,8 +30,7 @@ class _GroceryListState extends State<GroceryList> {
 
     final response = await http.get(url);
 
-    final Map<String, dynamic> listData =
-        await json.decode(response.body);
+    final Map<String, dynamic> listData = await json.decode(response.body);
     final List<GroceryItem> loadedItems = [];
     for (final item in listData.entries) {
       final category = categories.entries
@@ -52,13 +51,17 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   void _addItem() async {
-    await Navigator.of(context).push<GroceryItem>(
+    final result = await Navigator.of(context).push<GroceryItem>(
       MaterialPageRoute(
         builder: (ctx) => const NewItem(),
       ),
     );
 
-    _loadItems();
+    if (result != null) {
+      setState(() {
+        _groceryItems.add(result);
+      });
+    }
   }
 
   void _removeItem(GroceryItem item) {
